@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Edit Resource</h2>
+<form method="post">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">{{ form.resource_name.label }}{{ form.resource_name(class_='form-control') }}</div>
+  <div class="mb-3">{{ form.resource_type.label }}{{ form.resource_type(class_='form-select') }}</div>
+  <div class="mb-3">{{ form.capacity.label }}{{ form.capacity(class_='form-control') }}</div>
+  <button class="btn btn-primary" type="submit">Save</button>
+</form>
+{% endblock %}

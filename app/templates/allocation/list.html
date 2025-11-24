@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Allocations <a class="btn btn-sm btn-primary" href="/allocations/create"><i class="bi bi-plus-lg me-1"></i> Allocate</a></h2>
+<div class="table-responsive">
+<table class="table align-middle">
+  <thead class="table-light"><tr><th>Event</th><th>Resource</th><th>Qty</th><th>Time</th><th></th></tr></thead>
+  <tbody>
+  {% for a in allocations %}
+    {% set overlap_total = namespace(total=a.quantity) %}
+    {% for other in a.resource.allocations %}
+      {% if other.allocation_id != a.allocation_id %}
+        {% if a.event.start_time < other.event.end_time and other.event.start_time < a.event.end_time %}
+          {% set overlap_total.total = overlap_total.total + other.quantity %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    <tr>
+      <td>{{a.event.title}}</td>
+      <td>
+        {{a.resource.resource_name}}
+        {% if overlap_total.total > a.resource.capacity %}
+          <span class="badge bg-danger ms-2"><i class="bi bi-exclamation-triangle-fill"></i> Conflict</span>
+        {% endif %}
+      </td>
+      <td>{{a.quantity}}</td>
+      <td>{{a.event.start_time}} — {{a.event.end_time}}</td>
+      <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

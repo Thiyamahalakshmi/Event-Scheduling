@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Resource Utilisation Report</h2>
+<form method="post" class="row g-3 mb-3">
+  <div class="col-auto"><label>Start</label><input class="form-control" type="datetime-local" name="start" required></div>
+  <div class="col-auto"><label>End</label><input class="form-control" type="datetime-local" name="end" required></div>
+  <div class="col-auto align-self-end"><button class="btn btn-primary" type="submit">Run Report</button></div>
+</form>
+{% if results %}
+  <h4>Report for {{start}} to {{end}}</h4>
+  <table class="table">
+    <thead><tr><th>Resource</th><th>Total Hours (in range)</th><th>Upcoming Bookings</th></tr></thead>
+    <tbody>
+    {% for row in results %}
+      <tr>
+        <td>{{row.resource.resource_name}} ({{row.resource.resource_type}})</td>
+        <td>{{'%.2f'|format(row.total_hours)}}</td>
+        <td>
+          <ul>
+          {% for ev in row.upcoming %}
+            <li>{{ev.title}} — {{ev.start_time}} to {{ev.end_time}}</li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}
